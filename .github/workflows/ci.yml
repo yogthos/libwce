@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / ${{ matrix.build }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        build: [release, sanitizers]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and run tests
+        run: |
+          if [ "${{ matrix.build }}" = "sanitizers" ]; then
+            make test DEBUG=1
+          else
+            make test
+          fi
+
+      - name: Build demos
+        run: |
+          # wce.o on disk was built with the test step's flags; rebuild
+          # demos in the same mode so the sanitizer runtime is linked
+          # (or not) consistently with the .o files.
+          make clean
+          if [ "${{ matrix.build }}" = "sanitizers" ]; then
+            make demos DEBUG=1
+          else
+            make demos
+          fi
