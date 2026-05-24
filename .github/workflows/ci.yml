@@ -2,38 +2,43 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, rust]
   pull_request:
     branches: [main]
 
 jobs:
   test:
-    name: ${{ matrix.os }} / ${{ matrix.build }}
+    name: ${{ matrix.os }} / ${{ matrix.profile }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-        build: [release, sanitizers]
+        profile: [debug, release]
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build and run tests
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Run tests (${{ matrix.profile }})
         run: |
-          if [ "${{ matrix.build }}" = "sanitizers" ]; then
-            make test DEBUG=1
+          if [ "${{ matrix.profile }}" = "release" ]; then
+            cargo test --release
           else
-            make test
+            cargo test
           fi
 
-      - name: Build demos
+      - name: Build examples (${{ matrix.profile }})
         run: |
-          # wce.o on disk was built with the test step's flags; rebuild
-          # demos in the same mode so the sanitizer runtime is linked
-          # (or not) consistently with the .o files.
-          make clean
-          if [ "${{ matrix.build }}" = "sanitizers" ]; then
-            make demos DEBUG=1
+          if [ "${{ matrix.profile }}" = "release" ]; then
+            cargo build --examples --release
           else
-            make demos
+            cargo build --examples
           fi
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - run: cargo clippy --all-targets -- -D warnings
