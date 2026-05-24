@@ -1,3 +1,5 @@
+#![allow(clippy::needless_range_loop)]
+
 use wce::*;
 
 fn quantize_coeff(c: i32, lossy_bits: u8) -> i32 {
@@ -174,7 +176,7 @@ fn dpcm_rt(bpcs: &[u8]) {
 
 #[test] fn dpcm_smooth() { dpcm_rt(&[5,5,5,6,6,6,7,7,8,8]); }
 #[test] fn dpcm_jumpy() { dpcm_rt(&[0,8,0,16,4,12,2,20,1,5]); }
-#[test] fn dpcm_long_constant() { dpcm_rt(&vec![7u8; 100]); }
+#[test] fn dpcm_long_constant() { dpcm_rt(&[7u8; 100]); }
 
 #[test]
 fn dpcm_single_group() {
@@ -207,7 +209,7 @@ fn dpcm_rice_corruption() {
     assert_eq!(out, [7, 7, 7, 7, 7]);
 }
 
-#[test] fn pick_k_constant() { assert_eq!(pick_rice_k_for_bpcs(&vec![5u8; 20], 6), 0); }
+#[test] fn pick_k_constant() { assert_eq!(pick_rice_k_for_bpcs(&[5u8; 20], 6), 0); }
 #[test] fn pick_k_big_jumps() { assert!(pick_rice_k_for_bpcs(&[0,16,0,16,0,16,0,16], 6) >= 3); }
 
 // pack
@@ -335,7 +337,7 @@ fn codec_rejects_size_mismatch() {
     }
 }
 
-#[test] fn codec_sparse_block_mix() { let mut c = [0i32; 256]; c[0]=1024; c[1]=-512; c[128]=256; c[129]=-128; roundtrip(&c, 3); }
+#[test] fn codec_sparse_block_mix() { let mut c = [0i32; 256]; c[0] = 1024; c[1] = -512; c[128] = 256; c[129] = -128; roundtrip(&c, 3); }
 
 #[test] fn codec_partial_final_block() { let mut c = [0i32; 40]; for i in 0..40 { c[i] = (i as i32*7) * if i&1!=0 { -1 } else { 1 }; } roundtrip(&c, 0); }
 

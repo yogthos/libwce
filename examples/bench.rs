@@ -74,7 +74,7 @@ fn main() {
             let ratio = coeff_bytes as f64 / enc_len as f64;
 
             let enc_buf2 = enc_buf.clone();
-            let enc_mbps = measure_mbps(|| { let mut b = enc_buf2.clone(); if encode(&coeffs, lbs, &mut b).is_err() { return; } }, coeff_bytes);
+             let enc_mbps = measure_mbps(|| { let mut b = enc_buf2.clone(); if encode(&coeffs, lbs, &mut b).is_err() {} }, coeff_bytes);
             let dec_mbps = measure_mbps(|| {
                 let mut out = vec![0i32; *n];
                 if decode(&enc_buf[..enc_len], &mut out).is_err() { return; }

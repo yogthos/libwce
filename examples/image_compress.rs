@@ -1,3 +1,5 @@
+#![allow(clippy::too_many_arguments)]
+
 use wce::*;
 use std::io::Write;
 use std::fs;
@@ -160,7 +162,7 @@ fn main() {
         haar_2d(&mut recon, w, h, false);
 
         let recon_img = Pgm {
-            w: w, h: h,
+            w, h,
             pixels: recon.iter().map(|&v| (v + 128.0).clamp(0.0, 255.0).round() as u8).collect(),
         };
 

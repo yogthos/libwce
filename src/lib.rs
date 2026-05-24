@@ -1,3 +1,5 @@
+#![allow(clippy::needless_range_loop)]
+
 use std::cmp::Ordering;
 
 pub const FORMAT_VERSION: u8 = 4;
