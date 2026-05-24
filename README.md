@@ -85,7 +85,7 @@ quantization grid.
 cargo test                    # run the unit-test suite (81 tests)
 cargo build --examples        # build the demo + bench binaries
 cargo run --example mode_shootout
-cargo run --release --example image_compress -- demo/Cthulhu.pgm demo/Cthulhu
+cargo run --release --example image_compress -- examples/Cthulhu.pgm examples/Cthulhu
 cargo run --release --example bench        # benchmark harness, CSV to stdout
 ```
 
