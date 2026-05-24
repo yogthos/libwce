@@ -1,0 +1,11 @@
+[package]
+name = "wce"
+version = "0.2.0"
+edition = "2021"
+license = "MIT"
+
+[dependencies]
+
+[profile.release]
+lto = true
+codegen-units = 1
