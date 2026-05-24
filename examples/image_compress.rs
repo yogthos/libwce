@@ -98,8 +98,8 @@ fn psnr(a: &Pgm, b: &Pgm) -> f64 {
 
 fn main() {
     let args: Vec<String> = std::env::args().collect();
-    let in_path = args.get(1).map_or("demo/Cthulhu.pgm", |s| s.as_str());
-    let out_stem = args.get(2).map_or("demo/Cthulhu", |s| s.as_str());
+    let in_path = args.get(1).map_or("examples/Cthulhu.pgm", |s| s.as_str());
+    let out_stem = args.get(2).map_or("examples/Cthulhu", |s| s.as_str());
 
     let orig = pgm_read(in_path).expect("failed to read PGM");
     if orig.w & 1 != 0 || orig.h & 1 != 0 { eprintln!("image dims must be even"); return; }
